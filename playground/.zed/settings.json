@@ -1,0 +1,23 @@
+// Project settings for the test folder only.
+{
+  "format_on_save": "off",
+  "autosave": "off",
+  "lsp": {
+    "template-string-converter": {
+      // Development: run the server from this checkout instead of the npm
+      // package. "arguments" alone means "run with the Node that Zed manages".
+      // Zed starts the server in this folder, so the path is relative to it.
+      "binary": {
+        "arguments": ["../server/src/server.js", "--stdio"]
+      },
+      "settings": {
+        "enabled": true,
+        // "hybrid" (default) | "onType" | "applyEdit"
+        "convertVia": "hybrid",
+        "autoRevert": false,
+        // Debugging aid: every message the server handles, with document text.
+        "debugLogFile": "../server/server.log"
+      }
+    }
+  }
+}

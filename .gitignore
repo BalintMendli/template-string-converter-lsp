@@ -1,0 +1,5 @@
+target/
+node_modules/
+*.wasm
+server/dist/
+server/server.log

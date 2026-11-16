@@ -1,0 +1,34 @@
+{
+  "name": "template-string-converter-language-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Language server that turns quotes into backticks when ${ is typed inside a JavaScript or TypeScript string",
+  "keywords": [
+    "lsp",
+    "language-server",
+    "template-literal",
+    "zed"
+  ],
+  "license": "MIT",
+  "author": "Balint Mendli",
+  "bin": {
+    "template-string-converter-language-server": "dist/server.js"
+  },
+  "files": [
+    "dist/server.js"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "esbuild src/server.js --bundle --platform=node --target=node18 --minify --legal-comments=none --outfile=dist/server.js",
+    "test": "node --test \"test/*.test.js\"",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "typescript": "5.9.3",
+    "vscode-languageserver": "9.0.1",
+    "vscode-languageserver-textdocument": "1.0.12"
+  }
+}

@@ -1,0 +1,13 @@
+id = "template-string-converter-lsp"
+name = "Template String Converter"
+description = "Turns quotes into backticks when you type ${ inside a JavaScript or TypeScript string."
+version = "0.1.0"
+schema_version = 1
+authors = ["Balint Mendli"]
+# TODO before publishing: the public HTTPS URL of this repository.
+repository = "https://github.com/OWNER/template-string-converter-lsp"
+
+# The server id is also the key under "lsp" in Zed's settings.
+[language_servers.template-string-converter]
+name = "Template String Converter"
+languages = ["JavaScript", "TypeScript", "TSX"]
