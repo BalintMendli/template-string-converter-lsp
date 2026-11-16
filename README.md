@@ -119,9 +119,8 @@ cargo build --release --target wasm32-wasip2
 
 1. Bump `version` in `server/package.json`, and in `extension.toml` and
    `Cargo.toml` when the extension itself changed.
-2. Publish the server from `server/` with `npm publish` (remove
-   `"private": true` first; it is there to prevent an accidental publish).
-   The extension installs the newest published server version, so a
+2. Publish the server from `server/` with `npm publish`; it builds and tests
+   first. The extension installs the newest published server version, so a
    server-only fix needs nothing more.
 3. For an extension change, open a pull request against
    [zed-industries/extensions](https://github.com/zed-industries/extensions)
