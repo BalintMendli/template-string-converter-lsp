@@ -11,6 +11,11 @@
   ],
   "license": "MIT",
   "author": "Balint Mendli",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BalintMendli/template-string-converter-lsp.git",
+    "directory": "server"
+  },
   "bin": {
     "template-string-converter-language-server": "dist/server.js"
   },
