@@ -7,6 +7,17 @@ authors = ["Balint Mendli"]
 repository = "https://github.com/BalintMendli/template-string-converter-lsp"
 
 # The server id is also the key under "lsp" in Zed's settings.
+#
+# HTML, Svelte and Vue.js are only served inside their <script> blocks. Those
+# languages come from other extensions; without them the entries do nothing.
 [language_servers.template-string-converter]
 name = "Template String Converter"
-languages = ["JavaScript", "TypeScript", "TSX"]
+languages = ["JavaScript", "TypeScript", "TSX", "HTML", "Svelte", "Vue.js"]
+
+[language_servers.template-string-converter.language_ids]
+"JavaScript" = "javascript"
+"TypeScript" = "typescript"
+"TSX" = "typescriptreact"
+"HTML" = "html"
+"Svelte" = "svelte"
+"Vue.js" = "vue"

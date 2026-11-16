@@ -1,6 +1,6 @@
 {
   "name": "template-string-converter-language-server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Language server that turns quotes into backticks when ${ is typed inside a JavaScript or TypeScript string",
   "keywords": [
     "lsp",

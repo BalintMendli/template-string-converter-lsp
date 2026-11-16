@@ -8,8 +8,9 @@ const greeting = "hello |";        // type ${
 const greeting = `hello ${|`;      // quotes became backticks
 ```
 
-It works in JavaScript, TypeScript and TSX files, with `'single'` and
-`"double"` quotes. Backticks already inside the string are escaped.
+It works in JavaScript, TypeScript and TSX files, and inside the `<script>`
+blocks of HTML, Svelte and Vue files, with `'single'` and `"double"` quotes.
+Backticks already inside the string are escaped.
 
 This is an independent implementation for Zed of the idea behind the VS Code
 extension [Template String Converter](https://github.com/meganrogge/template-string-converter)
@@ -45,6 +46,15 @@ change meaning:
 - enum member values
 - directives such as `"use strict"`
 
+### HTML, Svelte and Vue
+
+Only the contents of `<script>` blocks are covered, including
+`<script lang="ts">`, `<script setup>` and `<script module>`. Everything else
+in the file is left alone: strings in template expressions (`{...}` in Svelte,
+`{{ ... }}` and `:prop="..."` in Vue), inline event handlers, and `<script>`
+blocks that hold data such as JSON. The Svelte and Vue languages come from
+their own Zed extensions, which need to be installed.
+
 ## Settings
 
 In Zed's `settings.json`:
@@ -78,7 +88,8 @@ quote.
 
 Zed extensions cannot listen to edits or change buffers, so the extension ships
 a small language server and attaches it to the JavaScript and TypeScript
-languages. The server reaches the buffer in two ways:
+languages, and to HTML, Svelte and Vue for their script blocks. The server
+reaches the buffer in two ways:
 
 - **On-type formatting.** The server registers `{` as a trigger character. Zed
   asks it for edits after a `{` is typed, and pins the cursor while applying
@@ -88,7 +99,8 @@ languages. The server reaches the buffer in two ways:
 
 `"hybrid"` uses whichever of the two fits the keystroke. The server finds the
 string with the TypeScript parser, so comments, regular expressions and JSX
-text are never mistaken for strings.
+text are never mistaken for strings. In markup files it parses each `<script>`
+block on its own.
 
 ## Development
 

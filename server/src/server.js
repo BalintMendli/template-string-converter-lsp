@@ -27,7 +27,7 @@ const {
   TextDocumentSyncKind,
 } = require('vscode-languageserver/node');
 const { TextDocument } = require('vscode-languageserver-textdocument');
-const { convertToTemplate, revertToQuotes, createParseCache } = require('./convert');
+const { convertToTemplate, revertToQuotes, warmParse, createParseCache } = require('./convert');
 
 const DEFAULTS = Object.freeze({ enabled: true, convertVia: 'hybrid', autoRevert: false, debugLogFile: null });
 
@@ -52,9 +52,9 @@ const lastQuote = new Map();
 /** Document version an applyEdit conversion was sent for, so a client that
  *  also asks about the same keystroke does not get the edits twice. */
 const convertedAtVersion = new Map();
-/** Parsed documents, keyed by URI. */
+/** Parsed scripts, keyed by document URI and script block number. */
 const parseCache = createParseCache();
-const parserFor = (uri) => (text, languageId) => parseCache.parse(uri, text, languageId);
+const parserFor = (uri) => (text, languageId, slot = 0) => parseCache.parse(`${uri}#${slot}`, text, languageId);
 
 function debug(event, data) {
   if (!settings.debugLogFile) return;
@@ -159,7 +159,8 @@ connection.onDidChangeTextDocument(({ textDocument, contentChanges }) => {
 
   // A "$" was typed: a "{" may be next. Parse now, while nothing is waiting,
   // so that the answer to that "{" only needs an incremental re-parse.
-  if (steps.some((step) => step.text === '$')) parseCache.parse(textDocument.uri, newText, doc.languageId);
+  const dollar = steps.find((step) => step.text === '$');
+  if (dollar) warmParse(newText, dollar.offset, doc.languageId, parserFor(textDocument.uri));
 
   if (settings.convertVia !== 'onType') {
     // One conversion per auto-closed "{}" that was just inserted. In pure

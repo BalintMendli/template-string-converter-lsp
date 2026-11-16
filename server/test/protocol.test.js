@@ -150,6 +150,30 @@ for (const [label, script] of servers) {
     assert.equal(await server.onType(0, 23), null);
   });
 
+  withServer('Svelte: converts inside <script> through both routes, never in markup', undefined, async (server) => {
+    server.open('<script lang="ts">\n  let a: string = "hi $";\n  let b = \'x $ y\';\n</script>\n\n<p title="t $">{a}</p>\n', 'svelte');
+    // Lone "{" before the closing quote: on-type formatting.
+    server.change({ range: at(1, 23), text: '{' });
+    assert.deepEqual(await server.onType(1, 24), [
+      { range: { start: pos(1, 18), end: pos(1, 19) }, newText: '`' },
+      { range: { start: pos(1, 24), end: pos(1, 25) }, newText: '`' },
+    ]);
+    // Auto-closed "{}" mid-string: applyEdit.
+    server.change({ range: at(2, 14), text: '{}' });
+    await server.sync();
+    assert.equal(server.applyEdits.length, 1);
+    assert.deepEqual(
+      server.applyEdits[0].edit.documentChanges[0].edits.map((e) => [e.range.start.line, e.range.start.character]),
+      [[2, 10], [2, 18]],
+    );
+    // Same keystrokes in the markup: nothing.
+    server.change({ range: at(5, 13), text: '{' });
+    assert.equal(await server.onType(5, 14), null);
+    server.change({ range: at(5, 14), text: '}' }, { range: at(5, 13), text: '' }, { range: at(5, 13), text: '{}' });
+    await server.sync();
+    assert.equal(server.applyEdits.length, 1);
+  });
+
   withServer('convertVia "onType" never sends applyEdit', { convertVia: 'onType' }, async (server) => {
     server.open("const a = 'hello $ world';\n");
     server.change({ range: at(0, 18), text: '{}' });
